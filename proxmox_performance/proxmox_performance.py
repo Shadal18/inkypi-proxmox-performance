@@ -85,10 +85,6 @@ class ProxmoxPerformance(BasePlugin):
                 "on path '/' with Propagate enabled."
             )
 
-        # Aggregate storage usage per node. Node-level 'disk'/'maxdisk' from
-        # /cluster/resources only reflects the node's root filesystem, not
-        # the combined storage pools shown on the Proxmox dashboard, so we
-        # sum the per-node storage entries instead.
         storage_used = defaultdict(int)
         storage_total = defaultdict(int)
         seen_shared = set()
@@ -96,8 +92,6 @@ class ProxmoxPerformance(BasePlugin):
             node_name = s.get("node")
             if not node_name:
                 continue
-            # Avoid double-counting a shared storage that appears against
-            # multiple nodes in the cluster.
             storage_id = s.get("storage")
             if s.get("shared") and storage_id in seen_shared:
                 continue
@@ -134,21 +128,14 @@ class ProxmoxPerformance(BasePlugin):
                 "uptime": _human_uptime(node.get("uptime")),
             })
 
-        total_netin = sum(g.get("netin", 0) or 0 for g in raw_guests)
-        total_netout = sum(g.get("netout", 0) or 0 for g in raw_guests)
-
+        # Sort guests purely by current memory usage, highest first. Stopped
+        # guests report no live mem figure and sink to the bottom naturally.
         visible_guests = [
             g for g in raw_guests if show_stopped or g.get("status") != "stopped"
         ]
-        visible_guests.sort(
-            key=lambda vm: (
-                vm.get("status") != "running",
-                vm.get("node", ""),
-                vm.get("vmid", 0),
-            )
-        )
+        visible_guests.sort(key=lambda g: (g.get("mem", 0) or 0), reverse=True)
 
-        max_rows = 14 if show_guest_stats else 20
+        max_rows = 12 if show_guest_stats else 18
         omitted = max(0, len(visible_guests) - max_rows)
 
         guests = []
@@ -179,8 +166,6 @@ class ProxmoxPerformance(BasePlugin):
             "stopped": stopped,
             "other": other,
             "nodes": nodes,
-            "net_in_h": _human_bytes(total_netin),
-            "net_out_h": _human_bytes(total_netout),
             "guests": guests,
             "show_guest_stats": show_guest_stats,
             "omitted": omitted,

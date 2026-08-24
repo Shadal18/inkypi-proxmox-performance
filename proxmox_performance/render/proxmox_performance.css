@@ -1,15 +1,11 @@
-/*
-  Palette restricted to the 6 colors supported by Waveshare ACeP e-paper
-  panels (black, white, red, yellow, blue, green). Using only these pure
-  values avoids anti-aliased gradients that dither poorly on e-ink.
-*/
 :root {
   --c-black: #000000;
   --c-white: #ffffff;
-  --c-red: #ff0000;
-  --c-yellow: #ffd400;
-  --c-blue: #0000ff;
-  --c-green: #008000;
+  --c-red: #e02424;
+  --c-yellow: #e0a800;
+  --c-blue: #1447c4;
+  --c-green: #1a7a3c;
+  --c-gray: #6b7280;
 }
 
 * {
@@ -30,209 +26,134 @@ body {
 .pm-dashboard {
   width: 100%;
   height: 100%;
-  padding: 3vw;
+  padding: 2.6vw;
   display: flex;
   flex-direction: column;
-  gap: 2vh;
+  gap: 1.6vh;
 }
 
 .pm-header {
   display: flex;
-  flex-direction: column;
-  gap: 1vh;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2vw;
 }
 
 .pm-title {
-  font-size: 4.2vw;
+  font-size: 3.2vw;
   font-weight: 800;
   letter-spacing: -0.02em;
 }
 
 .pm-summary {
   display: flex;
-  gap: 3vw;
-  font-size: 2.3vw;
+  gap: 1.2vw;
+  font-size: 1.5vw;
   font-weight: 700;
 }
 
-.pm-summary-item {
-  display: flex;
-  align-items: center;
-  gap: 0.6vw;
-}
-
-.pm-summary-item::before {
-  content: "";
-  display: inline-block;
-  width: 1.2vw;
-  height: 1.2vw;
-  border-radius: 50%;
-}
-
-.pm-dot-running::before {
-  background: var(--c-green);
-}
-.pm-dot-stopped::before {
-  background: var(--c-red);
-}
-.pm-dot-other::before {
-  background: var(--c-yellow);
-}
-
-.pm-block {
-  border-top: 0.25vh solid var(--c-black);
-  padding-top: 1.5vh;
-}
-
-.pm-block-title {
-  font-size: 2.4vw;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 1vh;
-}
-
-.pm-node {
-  margin-bottom: 1.2vh;
-}
-
-.pm-node-top {
-  display: flex;
-  align-items: baseline;
-  gap: 1.5vw;
-  font-size: 1.9vw;
-  font-weight: 700;
-  margin-bottom: 0.6vh;
-}
-
-.pm-node-status {
-  font-size: 1.6vw;
-  font-weight: 800;
-  text-transform: uppercase;
-  padding: 0.1vh 0.8vw;
+.pm-chip {
+  padding: 0.3vh 1vw;
   border-radius: 999px;
-  border: 0.15vh solid var(--c-black);
+  color: var(--c-white);
 }
 
-.pm-status-online,
-.pm-status-running {
-  background: var(--c-green);
-  color: var(--c-white);
-  border-color: var(--c-green);
+.pm-chip-running { background: var(--c-green); }
+.pm-chip-stopped { background: var(--c-red); }
+.pm-chip-other { background: var(--c-yellow); color: var(--c-black); }
+
+.pm-nodes {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+  padding-bottom: 1.4vh;
+  border-bottom: 0.18vh solid var(--c-black);
 }
-.pm-status-offline,
-.pm-status-stopped {
-  background: var(--c-red);
-  color: var(--c-white);
-  border-color: var(--c-red);
-}
-.pm-status-unknown,
-.pm-status-other {
-  background: var(--c-yellow);
-  color: var(--c-black);
-  border-color: var(--c-yellow);
+
+.pm-node-name {
+  font-size: 1.7vw;
+  font-weight: 700;
+  margin-bottom: 0.5vh;
 }
 
 .pm-node-uptime {
-  font-size: 1.5vw;
-  color: var(--c-black);
+  font-size: 1.3vw;
   font-weight: 400;
-  margin-left: auto;
+  color: var(--c-gray);
 }
 
-.pm-bars {
+.pm-gauges {
   display: flex;
-  flex-direction: column;
-  gap: 0.5vh;
+  gap: 1.6vw;
 }
 
-.pm-bar-row {
+.pm-gauge {
+  flex: 1;
+  min-width: 0;
+}
+
+.pm-gauge-top {
   display: flex;
-  align-items: center;
-  gap: 1vw;
-  font-size: 1.5vw;
+  justify-content: space-between;
+  font-size: 1.25vw;
+  font-weight: 600;
+  margin-bottom: 0.3vh;
 }
 
-.pm-bar-label {
-  width: 4.5vw;
+.pm-gauge-top span:first-child {
+  color: var(--c-gray);
   font-weight: 700;
 }
 
-.pm-bar-track {
-  flex: 1;
-  height: 1.6vh;
-  border: 0.15vh solid var(--c-black);
-  background: var(--c-white);
+.pm-gauge-track {
+  height: 1.1vh;
+  border-radius: 999px;
+  background: #e5e7eb;
   overflow: hidden;
 }
 
-.pm-bar-fill {
+.pm-gauge-fill {
   height: 100%;
+  border-radius: 999px;
 }
 
-.pm-bar-cpu {
-  background: var(--c-blue);
-}
-.pm-bar-mem {
-  background: var(--c-yellow);
-}
-.pm-bar-disk {
-  background: var(--c-green);
-}
+.pm-fill-cpu { background: var(--c-blue); }
+.pm-fill-mem { background: var(--c-yellow); }
+.pm-fill-disk { background: var(--c-green); }
 
-.pm-bar-value {
-  width: 22vw;
-  text-align: right;
-  white-space: nowrap;
-}
-
-.pm-net-line {
-  font-size: 1.5vw;
-  margin-top: 0.5vh;
-}
-
-.pm-guests-block {
+.pm-guests {
   flex: 1;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-}
-
-.pm-guest-grid {
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6vh;
+  gap: 0.5vh;
+  padding-top: 0.4vh;
 }
 
 .pm-guest-row {
   display: flex;
   align-items: center;
-  gap: 1.2vw;
-  font-size: 1.7vw;
-  border-bottom: 0.1vh solid var(--c-black);
+  gap: 1vw;
+  font-size: 1.55vw;
   padding-bottom: 0.4vh;
 }
 
 .pm-guest-dot {
-  width: 1.3vw;
-  height: 1.3vw;
+  width: 1.1vw;
+  height: 1.1vw;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
-.pm-guest-type {
-  width: 3.5vw;
-  font-weight: 700;
-  flex-shrink: 0;
-}
+.pm-dot-running { background: var(--c-green); }
+.pm-dot-stopped { background: var(--c-red); }
+.pm-dot-other { background: var(--c-yellow); }
 
-.pm-guest-vmid {
-  width: 4vw;
-  color: var(--c-blue);
-  font-weight: 700;
+.pm-guest-id {
+  width: 7vw;
   flex-shrink: 0;
+  font-weight: 700;
+  color: var(--c-blue);
 }
 
 .pm-guest-name {
@@ -241,44 +162,26 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-weight: 600;
-}
-
-.pm-guest-node {
-  width: 10vw;
-  flex-shrink: 0;
-  color: var(--c-black);
-  opacity: 0.8;
-}
-
-.pm-guest-status {
-  width: 9vw;
-  flex-shrink: 0;
-  font-size: 1.3vw;
-  font-weight: 800;
-  text-align: center;
-  padding: 0.1vh 0.4vw;
-  border-radius: 999px;
-  border: 0.12vh solid var(--c-black);
+  font-weight: 500;
 }
 
 .pm-guest-stats {
-  width: 20vw;
   flex-shrink: 0;
-  text-align: right;
-  font-size: 1.4vw;
-  opacity: 0.85;
+  font-size: 1.35vw;
+  color: var(--c-gray);
+  font-weight: 600;
 }
 
 .pm-omitted {
-  font-size: 1.5vw;
-  margin-top: 0.6vh;
+  font-size: 1.4vw;
+  color: var(--c-gray);
   font-style: italic;
+  margin-top: 0.4vh;
 }
 
 .pm-footer {
   display: flex;
   justify-content: flex-end;
-  font-size: 1.4vw;
-  opacity: 0.7;
+  font-size: 1.2vw;
+  color: var(--c-gray);
 }
