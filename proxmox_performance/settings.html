@@ -343,8 +343,8 @@
       <div class="pm-eyebrow">Proxmox Performance</div>
       <h2>Show live VM, container, and node health from your Proxmox cluster.</h2>
       <p>
-        Connect InkyPi to your Proxmox VE server to display node CPU/memory/disk health alongside
-        per-guest running status and resource usage on your e-paper display.
+        Connect InkyPi to your Proxmox VE server to display node CPU/memory/disk health alongside per-guest running
+        status and resource usage on your e-paper display.
       </p>
 
       <div class="pm-metrics">
@@ -371,27 +371,26 @@
     <section class="pm-hint-card">
       <div class="pm-hint-title">API token setup</div>
       <p class="pm-hint-copy">
-        In Proxmox, go to <strong>Datacenter → Permissions → API Tokens → Add</strong>. Select a user
-        (a dedicated non-root account is recommended over <code>root@pam</code>) and enter any label as
-        the Token ID.
+        In Proxmox, go to <strong>Datacenter → Permissions → API Tokens → Add</strong>. Select a user (a dedicated
+        non-root account is recommended over <code>root@pam</code>) and enter any label as the Token ID.
       </p>
       <p class="pm-hint-copy" style="margin-top: 10px">
-        After saving, Proxmox shows a combined <strong>Token ID</strong> in the form
-        <code>user@realm!tokenid</code> and a <strong>Secret</strong> — both shown only once. Copy the
-        full combined Token ID into InkyPi's <code>PROXMOX_TOKEN_ID</code> key and the Secret into
-        <code>PROXMOX_TOKEN_SECRET</code>, using the key icon on the main screen.
+        After saving, Proxmox shows a combined <strong>Token ID</strong> in the form <code>user@realm!tokenid</code> and
+        a <strong>Secret</strong> — both shown only once. Copy the full combined Token ID into InkyPi's
+        <code>PROXMOX_TOKEN_ID</code> key and the Secret into <code>PROXMOX_TOKEN_SECRET</code>, using the key icon on
+        the main screen.
       </p>
       <p class="pm-hint-copy" style="margin-top: 10px">
-        Then go to <strong>Datacenter → Permissions → Add</strong> and grant a role on path
-        <code>/</code> with Propagate enabled, <strong>twice</strong>: once selecting the plain user
-        account (e.g. <code>API_User@pam</code>) and once selecting the token entity itself
-        (e.g. <code>API_User@pam!tokenid</code>). Some Proxmox setups only pick up guest/VM data when
-        both the user and the token have an explicit grant, not just one or the other.
+        Then go to <strong>Datacenter → Permissions → Add</strong> and grant a role on path <code>/</code> with
+        Propagate enabled, <strong>twice</strong>: once selecting the plain user account (e.g.
+        <code>API_User@pam</code>) and once selecting the token entity itself (e.g. <code>API_User@pam!tokenid</code>).
+        Some Proxmox setups only pick up guest/VM data when both the user and the token have an explicit grant, not just
+        one or the other.
       </p>
       <p class="pm-hint-copy" style="margin-top: 10px">
-        Use the <code>PVEAuditor</code> role for both entries if you only want this plugin to read
-        status. <code>PVEAdmin</code> also works but grants write access, so a leaked token could
-        modify or delete VMs, not just view them.
+        Use the <code>PVEAuditor</code> role for both entries if you only want this plugin to read status.
+        <code>PVEAdmin</code> also works but grants write access, so a leaked token could modify or delete VMs, not just
+        view them.
       </p>
     </section>
 
@@ -464,10 +463,10 @@
     </section>
 
     <section class="pm-link-card">
-      <a href="https://ko-fi.com/shadal" target="_blank" rel="noopener noreferrer">
-        ko-fi.com/shadal
+      <a href="https://github.com/Shadal18/inkypi-proxmox-performance" target="_blank" rel="noopener noreferrer">
+        github.com/Shadal18/inkypi-proxmox-performance
       </a>
-      <div class="pm-link-help">Support development, get updates, and follow release notes.</div>
+      <div class="pm-link-help">Setup help, updates, release notes, and source code.</div>
     </section>
   </div>
 </div>
@@ -480,19 +479,19 @@
       verify_ssl: "true",
       show_stopped: "false",
       show_guest_stats: "true",
-    };
+    }
 
     const values =
       typeof loadPluginSettings !== "undefined" && loadPluginSettings && typeof pluginSettings !== "undefined"
         ? Object.assign({}, defaults, pluginSettings)
-        : defaults;
+        : defaults
 
     Object.keys(defaults).forEach(function (key) {
-      const element = document.getElementById(key);
+      const element = document.getElementById(key)
       if (element) {
-        element.value = values[key] != null ? values[key] : defaults[key];
+        element.value = values[key] != null ? values[key] : defaults[key]
       }
-    });
+    })
 
     if (typeof kofiWidgetOverlay !== "undefined") {
       kofiWidgetOverlay.draw("shadal", {
@@ -500,7 +499,7 @@
         "floating-chat.donateButton.text": "I ❤️ Coffee",
         "floating-chat.donateButton.background-color": "#00b9fe",
         "floating-chat.donateButton.text-color": "#fff",
-      });
+      })
     }
-  });
+  })
 </script>
