@@ -30,6 +30,9 @@ def _human_uptime(seconds):
     return f"{minutes}m"
 
 
+GUEST_BAR_COLORS = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8"]
+
+
 class ProxmoxPerformance(BasePlugin):
     DEFAULT_TIMEOUT = 10
 
@@ -105,50 +108,56 @@ class ProxmoxPerformance(BasePlugin):
         stopped = status_counts["stopped"]
         other = len(raw_guests) - running - stopped
 
-        nodes = []
+        cpu_pcts = []
+        mem_used_total = mem_total_total = 0
+        disk_used_total = disk_total_total = 0
+        primary_node = None
+
         for node in sorted(raw_nodes, key=lambda n: n.get("node", "")):
             name = node.get("node", "?")
             mem_used = node.get("mem", 0)
             mem_total = node.get("maxmem", 0)
-
             disk_used = storage_used.get(name, node.get("disk", 0))
             disk_total = storage_total.get(name, node.get("maxdisk", 0))
 
-            nodes.append({
-                "name": name,
-                "status": node.get("status", "unknown"),
-                "cpu_pct": round((node.get("cpu") or 0) * 100),
-                "maxcpu": node.get("maxcpu", "?"),
-                "mem_used_h": _human_bytes(mem_used),
-                "mem_total_h": _human_bytes(mem_total),
-                "mem_pct": round((mem_used / mem_total * 100) if mem_total else 0),
-                "disk_used_h": _human_bytes(disk_used),
-                "disk_total_h": _human_bytes(disk_total),
-                "disk_pct": round((disk_used / disk_total * 100) if disk_total else 0),
-                "uptime": _human_uptime(node.get("uptime")),
-            })
+            cpu_pcts.append((node.get("cpu") or 0) * 100)
+            mem_used_total += mem_used
+            mem_total_total += mem_total
+            disk_used_total += disk_used
+            disk_total_total += disk_total
 
-        # Sort guests purely by current memory usage, highest first. Stopped
-        # guests report no live mem figure and sink to the bottom naturally.
+            if primary_node is None:
+                primary_node = {
+                    "name": name,
+                    "status": node.get("status", "unknown"),
+                    "uptime": _human_uptime(node.get("uptime")),
+                }
+
+        cpu_pct = round(sum(cpu_pcts) / len(cpu_pcts)) if cpu_pcts else 0
+        mem_pct = round((mem_used_total / mem_total_total * 100) if mem_total_total else 0)
+        disk_pct = round((disk_used_total / disk_total_total * 100) if disk_total_total else 0)
+
         visible_guests = [
             g for g in raw_guests if show_stopped or g.get("status") != "stopped"
         ]
         visible_guests.sort(key=lambda g: (g.get("mem", 0) or 0), reverse=True)
 
-        max_rows = 12 if show_guest_stats else 18
+        max_rows = 10 if show_guest_stats else 14
         omitted = max(0, len(visible_guests) - max_rows)
+        trimmed = visible_guests[:max_rows]
+
+        max_mem = max((g.get("mem", 0) or 0 for g in trimmed), default=0)
 
         guests = []
-        for guest in visible_guests[:max_rows]:
+        for i, guest in enumerate(trimmed):
             status = guest.get("status", "unknown")
+            mem_bytes = guest.get("mem", 0) or 0
             g_cpu = round((guest.get("cpu") or 0) * 100) if status == "running" else None
-            g_mem = guest.get("mem", 0) if status == "running" else None
             g_maxmem = guest.get("maxmem", 0) if status == "running" else None
 
             guests.append({
                 "vmid": guest.get("vmid", "?"),
                 "name": guest.get("name") or f"unnamed-{guest.get('vmid', '?')}",
-                "node": guest.get("node", "?"),
                 "type": "CT" if guest.get("type") == "lxc" else "VM",
                 "status": status,
                 "status_class": (
@@ -156,16 +165,21 @@ class ProxmoxPerformance(BasePlugin):
                     else "stopped" if status == "stopped"
                     else "other"
                 ),
+                "bar_color": GUEST_BAR_COLORS[i % len(GUEST_BAR_COLORS)],
+                "bar_pct": round((mem_bytes / max_mem * 100) if max_mem else 0),
                 "cpu_pct": g_cpu,
-                "mem_used_h": _human_bytes(g_mem) if g_mem is not None else None,
+                "mem_used_h": _human_bytes(mem_bytes) if status == "running" else "-",
                 "mem_total_h": _human_bytes(g_maxmem) if g_maxmem is not None else None,
             })
 
         template_params = {
+            "primary_node": primary_node or {"name": "n/a", "status": "unknown", "uptime": "n/a"},
             "running": running,
             "stopped": stopped,
             "other": other,
-            "nodes": nodes,
+            "cpu_pct": cpu_pct,
+            "mem_pct": mem_pct,
+            "disk_pct": disk_pct,
             "guests": guests,
             "show_guest_stats": show_guest_stats,
             "omitted": omitted,
