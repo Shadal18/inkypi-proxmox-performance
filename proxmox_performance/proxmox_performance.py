@@ -1,4 +1,4 @@
-from collections import Counter
+from collections import Counter, defaultdict
 from datetime import datetime
 
 import requests
@@ -76,6 +76,7 @@ class ProxmoxPerformance(BasePlugin):
 
         raw_nodes = [r for r in resources if r.get("type") == "node"]
         raw_guests = [r for r in resources if r.get("type") in ("qemu", "lxc")]
+        raw_storage = [r for r in resources if r.get("type") == "storage"]
 
         if not raw_nodes and not raw_guests:
             raise RuntimeError(
@@ -84,6 +85,27 @@ class ProxmoxPerformance(BasePlugin):
                 "on path '/' with Propagate enabled."
             )
 
+        # Aggregate storage usage per node. Node-level 'disk'/'maxdisk' from
+        # /cluster/resources only reflects the node's root filesystem, not
+        # the combined storage pools shown on the Proxmox dashboard, so we
+        # sum the per-node storage entries instead.
+        storage_used = defaultdict(int)
+        storage_total = defaultdict(int)
+        seen_shared = set()
+        for s in raw_storage:
+            node_name = s.get("node")
+            if not node_name:
+                continue
+            # Avoid double-counting a shared storage that appears against
+            # multiple nodes in the cluster.
+            storage_id = s.get("storage")
+            if s.get("shared") and storage_id in seen_shared:
+                continue
+            if s.get("shared"):
+                seen_shared.add(storage_id)
+            storage_used[node_name] += s.get("disk", 0) or 0
+            storage_total[node_name] += s.get("maxdisk", 0) or 0
+
         status_counts = Counter(g.get("status", "unknown") for g in raw_guests)
         running = status_counts["running"]
         stopped = status_counts["stopped"]
@@ -91,12 +113,15 @@ class ProxmoxPerformance(BasePlugin):
 
         nodes = []
         for node in sorted(raw_nodes, key=lambda n: n.get("node", "")):
+            name = node.get("node", "?")
             mem_used = node.get("mem", 0)
             mem_total = node.get("maxmem", 0)
-            disk_used = node.get("disk", 0)
-            disk_total = node.get("maxdisk", 0)
+
+            disk_used = storage_used.get(name, node.get("disk", 0))
+            disk_total = storage_total.get(name, node.get("maxdisk", 0))
+
             nodes.append({
-                "name": node.get("node", "?"),
+                "name": name,
                 "status": node.get("status", "unknown"),
                 "cpu_pct": round((node.get("cpu") or 0) * 100),
                 "maxcpu": node.get("maxcpu", "?"),
