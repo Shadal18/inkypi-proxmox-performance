@@ -1,0 +1,284 @@
+/*
+  Palette restricted to the 6 colors supported by Waveshare ACeP e-paper
+  panels (black, white, red, yellow, blue, green). Using only these pure
+  values avoids anti-aliased gradients that dither poorly on e-ink.
+*/
+:root {
+  --c-black: #000000;
+  --c-white: #ffffff;
+  --c-red: #ff0000;
+  --c-yellow: #ffd400;
+  --c-blue: #0000ff;
+  --c-green: #008000;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--c-white);
+  color: var(--c-black);
+  font-family: "DejaVu Sans", "Liberation Sans", sans-serif;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.pm-dashboard {
+  width: 100%;
+  height: 100%;
+  padding: 3vw;
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+}
+
+.pm-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+}
+
+.pm-title {
+  font-size: 4.2vw;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.pm-summary {
+  display: flex;
+  gap: 3vw;
+  font-size: 2.3vw;
+  font-weight: 700;
+}
+
+.pm-summary-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6vw;
+}
+
+.pm-summary-item::before {
+  content: "";
+  display: inline-block;
+  width: 1.2vw;
+  height: 1.2vw;
+  border-radius: 50%;
+}
+
+.pm-dot-running::before {
+  background: var(--c-green);
+}
+.pm-dot-stopped::before {
+  background: var(--c-red);
+}
+.pm-dot-other::before {
+  background: var(--c-yellow);
+}
+
+.pm-block {
+  border-top: 0.25vh solid var(--c-black);
+  padding-top: 1.5vh;
+}
+
+.pm-block-title {
+  font-size: 2.4vw;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1vh;
+}
+
+.pm-node {
+  margin-bottom: 1.2vh;
+}
+
+.pm-node-top {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5vw;
+  font-size: 1.9vw;
+  font-weight: 700;
+  margin-bottom: 0.6vh;
+}
+
+.pm-node-status {
+  font-size: 1.6vw;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 0.1vh 0.8vw;
+  border-radius: 999px;
+  border: 0.15vh solid var(--c-black);
+}
+
+.pm-status-online,
+.pm-status-running {
+  background: var(--c-green);
+  color: var(--c-white);
+  border-color: var(--c-green);
+}
+.pm-status-offline,
+.pm-status-stopped {
+  background: var(--c-red);
+  color: var(--c-white);
+  border-color: var(--c-red);
+}
+.pm-status-unknown,
+.pm-status-other {
+  background: var(--c-yellow);
+  color: var(--c-black);
+  border-color: var(--c-yellow);
+}
+
+.pm-node-uptime {
+  font-size: 1.5vw;
+  color: var(--c-black);
+  font-weight: 400;
+  margin-left: auto;
+}
+
+.pm-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5vh;
+}
+
+.pm-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+  font-size: 1.5vw;
+}
+
+.pm-bar-label {
+  width: 4.5vw;
+  font-weight: 700;
+}
+
+.pm-bar-track {
+  flex: 1;
+  height: 1.6vh;
+  border: 0.15vh solid var(--c-black);
+  background: var(--c-white);
+  overflow: hidden;
+}
+
+.pm-bar-fill {
+  height: 100%;
+}
+
+.pm-bar-cpu {
+  background: var(--c-blue);
+}
+.pm-bar-mem {
+  background: var(--c-yellow);
+}
+.pm-bar-disk {
+  background: var(--c-green);
+}
+
+.pm-bar-value {
+  width: 22vw;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.pm-net-line {
+  font-size: 1.5vw;
+  margin-top: 0.5vh;
+}
+
+.pm-guests-block {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.pm-guest-grid {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6vh;
+}
+
+.pm-guest-row {
+  display: flex;
+  align-items: center;
+  gap: 1.2vw;
+  font-size: 1.7vw;
+  border-bottom: 0.1vh solid var(--c-black);
+  padding-bottom: 0.4vh;
+}
+
+.pm-guest-dot {
+  width: 1.3vw;
+  height: 1.3vw;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pm-guest-type {
+  width: 3.5vw;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.pm-guest-vmid {
+  width: 4vw;
+  color: var(--c-blue);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.pm-guest-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.pm-guest-node {
+  width: 10vw;
+  flex-shrink: 0;
+  color: var(--c-black);
+  opacity: 0.8;
+}
+
+.pm-guest-status {
+  width: 9vw;
+  flex-shrink: 0;
+  font-size: 1.3vw;
+  font-weight: 800;
+  text-align: center;
+  padding: 0.1vh 0.4vw;
+  border-radius: 999px;
+  border: 0.12vh solid var(--c-black);
+}
+
+.pm-guest-stats {
+  width: 20vw;
+  flex-shrink: 0;
+  text-align: right;
+  font-size: 1.4vw;
+  opacity: 0.85;
+}
+
+.pm-omitted {
+  font-size: 1.5vw;
+  margin-top: 0.6vh;
+  font-style: italic;
+}
+
+.pm-footer {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 1.4vw;
+  opacity: 0.7;
+}

@@ -1,0 +1,75 @@
+{% extends "plugin.html" %} {% block content %}
+<div class="pm-dashboard">
+  <header class="pm-header">
+    <h1 class="pm-title">PROXMOX STATUS</h1>
+    <div class="pm-summary">
+      <span class="pm-summary-item pm-dot-running">Running: {{ running }}</span>
+      <span class="pm-summary-item pm-dot-stopped">Stopped: {{ stopped }}</span>
+      <span class="pm-summary-item pm-dot-other">Other: {{ other }}</span>
+    </div>
+  </header>
+
+  <section class="pm-block">
+    <h2 class="pm-block-title">Node Health</h2>
+    {% for node in nodes %}
+    <div class="pm-node">
+      <div class="pm-node-top">
+        <span class="pm-node-name">{{ node.name }}</span>
+        <span class="pm-node-status pm-status-{{ node.status }}">{{ node.status }}</span>
+        <span class="pm-node-uptime">up {{ node.uptime }}</span>
+      </div>
+      <div class="pm-bars">
+        <div class="pm-bar-row">
+          <span class="pm-bar-label">CPU</span>
+          <div class="pm-bar-track">
+            <div class="pm-bar-fill pm-bar-cpu" style="width: {{ node.cpu_pct }}%;"></div>
+          </div>
+          <span class="pm-bar-value">{{ node.cpu_pct }}% ({{ node.maxcpu }} cores)</span>
+        </div>
+        <div class="pm-bar-row">
+          <span class="pm-bar-label">MEM</span>
+          <div class="pm-bar-track">
+            <div class="pm-bar-fill pm-bar-mem" style="width: {{ node.mem_pct }}%;"></div>
+          </div>
+          <span class="pm-bar-value">{{ node.mem_used_h }} / {{ node.mem_total_h }} ({{ node.mem_pct }}%)</span>
+        </div>
+        <div class="pm-bar-row">
+          <span class="pm-bar-label">DISK</span>
+          <div class="pm-bar-track">
+            <div class="pm-bar-fill pm-bar-disk" style="width: {{ node.disk_pct }}%;"></div>
+          </div>
+          <span class="pm-bar-value">{{ node.disk_used_h }} / {{ node.disk_total_h }} ({{ node.disk_pct }}%)</span>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    <div class="pm-net-line">Guest network I/O (since boot): in {{ net_in_h }} / out {{ net_out_h }}</div>
+  </section>
+
+  <section class="pm-block pm-guests-block">
+    <h2 class="pm-block-title">Guests</h2>
+    <div class="pm-guest-grid">
+      {% for guest in guests %}
+      <div class="pm-guest-row">
+        <span class="pm-guest-dot pm-dot-{{ guest.status_class }}"></span>
+        <span class="pm-guest-type">{{ guest.type }}</span>
+        <span class="pm-guest-vmid">{{ guest.vmid }}</span>
+        <span class="pm-guest-name">{{ guest.name }}</span>
+        <span class="pm-guest-node">{{ guest.node }}</span>
+        <span class="pm-guest-status pm-status-{{ guest.status }}">{{ guest.status | upper }}</span>
+        {% if show_guest_stats and guest.cpu_pct is not none %}
+        <span class="pm-guest-stats"
+          >CPU {{ guest.cpu_pct }}% &middot; Mem {{ guest.mem_used_h }}/{{ guest.mem_total_h }}</span
+        >
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% if omitted > 0 %}
+    <div class="pm-omitted">+ {{ omitted }} additional guest(s)</div>
+    {% endif %}
+  </section>
+
+  <footer class="pm-footer">Updated {{ updated }}</footer>
+</div>
+{% endblock %}

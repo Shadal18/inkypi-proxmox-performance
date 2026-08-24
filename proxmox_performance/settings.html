@@ -291,6 +291,20 @@
     line-height: 1.6;
   }
 
+  .floatingchat-container-wrap,
+  .floating-chat-kofi-popup-iframe {
+    right: 16px !important;
+    left: unset !important;
+  }
+
+  .floatingchat-container-wrap {
+    bottom: 14px !important;
+  }
+
+  .floating-chat-kofi-popup-iframe {
+    bottom: 76px !important;
+  }
+
   @media (max-width: 920px) {
     .pm-metrics,
     .pm-grid-2 {
@@ -358,23 +372,26 @@
       <div class="pm-hint-title">API token setup</div>
       <p class="pm-hint-copy">
         In Proxmox, go to <strong>Datacenter → Permissions → API Tokens → Add</strong>. Select a user
-        (a dedicated non-root account with the <code>PVEAuditor</code> role is recommended over
-        <code>root@pam</code>), enter any label as the Token ID, and leave
-        <strong>Privilege Separation</strong> checked so the token starts with no permissions of its own.
+        (a dedicated non-root account is recommended over <code>root@pam</code>) and enter any label as
+        the Token ID.
       </p>
       <p class="pm-hint-copy" style="margin-top: 10px">
         After saving, Proxmox shows a combined <strong>Token ID</strong> in the form
-        <code>user@realm!tokenid</code> (for example <code>root@pam!inkypi</code>) and a
-        <strong>Secret</strong> — both shown only once. Copy the full combined Token ID into InkyPi's
-        <code>PROXMOX_TOKEN_ID</code> key and the Secret into <code>PROXMOX_TOKEN_SECRET</code>, using
-        the key icon on the main screen.
+        <code>user@realm!tokenid</code> and a <strong>Secret</strong> — both shown only once. Copy the
+        full combined Token ID into InkyPi's <code>PROXMOX_TOKEN_ID</code> key and the Secret into
+        <code>PROXMOX_TOKEN_SECRET</code>, using the key icon on the main screen.
       </p>
       <p class="pm-hint-copy" style="margin-top: 10px">
-        If Privilege Separation is unchecked, the token inherits every permission the user account has
-        — for <code>root@pam</code>, that means full admin access. To scope it down instead: re-check
-        Privilege Separation, then use <strong>Permissions → Add → API Token Permission</strong> to grant
-        just the <code>PVEAuditor</code> role on path <code>/</code> with Propagate enabled, targeting the
-        token itself (not the user).
+        Then go to <strong>Datacenter → Permissions → Add</strong> and grant a role on path
+        <code>/</code> with Propagate enabled, <strong>twice</strong>: once selecting the plain user
+        account (e.g. <code>API_User@pam</code>) and once selecting the token entity itself
+        (e.g. <code>API_User@pam!tokenid</code>). Some Proxmox setups only pick up guest/VM data when
+        both the user and the token have an explicit grant, not just one or the other.
+      </p>
+      <p class="pm-hint-copy" style="margin-top: 10px">
+        Use the <code>PVEAuditor</code> role for both entries if you only want this plugin to read
+        status. <code>PVEAdmin</code> also works but grants write access, so a leaked token could
+        modify or delete VMs, not just view them.
       </p>
     </section>
 
@@ -445,9 +462,17 @@
         </div>
       </div>
     </section>
+
+    <section class="pm-link-card">
+      <a href="https://ko-fi.com/shadal" target="_blank" rel="noopener noreferrer">
+        ko-fi.com/shadal
+      </a>
+      <div class="pm-link-help">Support development, get updates, and follow release notes.</div>
+    </section>
   </div>
 </div>
 
+<script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const defaults = {
@@ -468,5 +493,14 @@
         element.value = values[key] != null ? values[key] : defaults[key];
       }
     });
+
+    if (typeof kofiWidgetOverlay !== "undefined") {
+      kofiWidgetOverlay.draw("shadal", {
+        type: "floating-chat",
+        "floating-chat.donateButton.text": "I ❤️ Coffee",
+        "floating-chat.donateButton.background-color": "#00b9fe",
+        "floating-chat.donateButton.text-color": "#fff",
+      });
+    }
   });
 </script>
