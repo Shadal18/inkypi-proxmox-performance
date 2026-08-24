@@ -136,6 +136,7 @@ body {
 
 .pm-panel {
   flex: 1;
+  min-height: 0;
   overflow: hidden;
   border: 0.22vh solid var(--pf-black);
   border-radius: 1vw;
@@ -149,21 +150,30 @@ body {
   font-size: 1.9vw;
   font-weight: 800;
   margin-bottom: 1vh;
+  flex-shrink: 0;
 }
 
 .pm-bar-list {
   flex: 1;
+  min-height: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 0.7vh;
+  gap: 0.6vh;
 }
 
+/*
+  Rows stretch equally to fill whatever vertical space the panel has,
+  so a shorter guest list fills the same panel height as a long one
+  instead of leaving empty space beneath it.
+*/
 .pm-bar-row {
+  flex: 1 1 0;
   display: flex;
   align-items: center;
   gap: 1.2vw;
   font-size: 1.5vw;
+  min-height: 2vh;
 }
 
 .pm-bar-label {
@@ -204,6 +214,7 @@ body {
 }
 
 .pm-omitted {
+  flex-shrink: 0;
   font-size: 1.4vw;
   color: var(--pf-gray);
   font-style: italic;

@@ -142,7 +142,9 @@ class ProxmoxPerformance(BasePlugin):
         ]
         visible_guests.sort(key=lambda g: (g.get("mem", 0) or 0), reverse=True)
 
-        max_rows = 10 if show_guest_stats else 14
+        # Generous cap purely as a safety limit against very large clusters;
+        # rows flex to fill the panel so no dead space when count is low.
+        max_rows = 22
         omitted = max(0, len(visible_guests) - max_rows)
         trimmed = visible_guests[:max_rows]
 
@@ -181,6 +183,7 @@ class ProxmoxPerformance(BasePlugin):
             "mem_pct": mem_pct,
             "disk_pct": disk_pct,
             "guests": guests,
+            "guest_count": len(guests),
             "show_guest_stats": show_guest_stats,
             "omitted": omitted,
             "updated": datetime.now().strftime("%Y-%m-%d %H:%M"),
