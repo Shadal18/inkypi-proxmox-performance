@@ -363,22 +363,20 @@
           non-root account is recommended over <code>root@pam</code>) and enter any label as the Token ID.
         </p>
         <p class="pm-note" style="margin-top: 10px">
-          After saving, Proxmox shows a combined <strong>Token ID</strong> in the form <code>user@realm!tokenid</code>
-          and a <strong>Secret</strong> — both shown only once. Copy the full combined Token ID into InkyPi's
-          <code>PROXMOX_TOKEN_ID</code> key and the Secret into <code>PROXMOX_TOKEN_SECRET</code>, using the key icon
-          on the main screen.
+          After saving, Proxmox shows a combined <strong>Token ID</strong> in the form
+          <code>user@realm!tokenid</code> and a <strong>Secret</strong> — both shown only once. Copy the full combined
+          Token ID into InkyPi's <code>PROXMOX_TOKEN_ID</code> key and the Secret into
+          <code>PROXMOX_TOKEN_SECRET</code>, using the key icon on the main screen.
         </p>
         <p class="pm-note" style="margin-top: 10px">
           Then go to <strong>Datacenter → Permissions → Add</strong> and grant a role on path <code>/</code> with
           Propagate enabled, <strong>twice</strong>: once selecting the plain user account (e.g.
           <code>API_User@pam</code>) and once selecting the token entity itself (e.g.
-          <code>API_User@pam!tokenid</code>). Some Proxmox setups only pick up guest/VM data when both the user and
-          the token have an explicit grant, not just one or the other.
+          <code>API_User@pam!tokenid</code>). Some Proxmox setups only pick up guest/VM data when both the user and the
+          token have an explicit grant, not just one or the other.
         </p>
         <p class="pm-note" style="margin-top: 10px">
           Use the <code>PVEAuditor</code> role for both entries if you only want this plugin to read status.
-          <code>PVEAdmin</code> also works but grants write access, so a leaked token could modify or delete VMs, not
-          just view them.
         </p>
       </div>
     </section>
