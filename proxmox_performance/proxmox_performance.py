@@ -160,6 +160,7 @@ class ProxmoxPerformance(BasePlugin):
             "show_guest_stats": show_guest_stats,
             "omitted": omitted,
             "updated": datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "plugin_settings": settings,
         }
 
         dimensions = device_config.get_resolution()
