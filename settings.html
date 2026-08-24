@@ -1,0 +1,64 @@
+<div class="form-group">
+  <label for="proxmox_host">Proxmox URL</label>
+  <input
+    type="text"
+    class="form-control"
+    id="proxmox_host"
+    name="proxmox_host"
+    placeholder="https://pve.example.lan:8006"
+    value="{{ settings.get('proxmox_host', '') }}"
+    required
+  >
+</div>
+
+<div class="form-group">
+  <label for="token_id">API token ID</label>
+  <input
+    type="text"
+    class="form-control"
+    id="token_id"
+    name="token_id"
+    placeholder="inkypi@pve!display"
+    value="{{ settings.get('token_id', '') }}"
+    required
+  >
+</div>
+
+<div class="form-group">
+  <label for="token_secret">API token secret</label>
+  <input
+    type="password"
+    class="form-control"
+    id="token_secret"
+    name="token_secret"
+    value="{{ settings.get('token_secret', '') }}"
+    required
+  >
+  <small class="form-text text-muted">
+    Treat this as a password. It is shown only once when Proxmox creates it.
+  </small>
+</div>
+
+<div class="form-group">
+  <label for="verify_ssl">TLS certificate validation</label>
+  <select class="form-control" id="verify_ssl" name="verify_ssl">
+    <option value="true" {% if settings.get('verify_ssl', 'true') == 'true' %}selected{% endif %}>
+      Verify certificate
+    </option>
+    <option value="false" {% if settings.get('verify_ssl') == 'false' %}selected{% endif %}>
+      Disable verification (self-signed certificate only)
+    </option>
+  </select>
+</div>
+
+<div class="form-group">
+  <label for="show_stopped">Stopped guests</label>
+  <select class="form-control" id="show_stopped" name="show_stopped">
+    <option value="false" {% if settings.get('show_stopped', 'false') == 'false' %}selected{% endif %}>
+      Hide stopped guests
+    </option>
+    <option value="true" {% if settings.get('show_stopped') == 'true' %}selected{% endif %}>
+      Show stopped guests
+    </option>
+  </select>
+</div>
