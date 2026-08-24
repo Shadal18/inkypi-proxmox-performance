@@ -70,8 +70,7 @@ class ProxmoxPerformance(BasePlugin):
 
         guests = self._pve_request(host, token_id, token_secret, verify_ssl)
 
-        width = device_config.width
-        height = device_config.height
+        width, height = device_config.get_resolution()
 
         image = Image.new("RGB", (width, height), "white")
         draw = ImageDraw.Draw(image)
