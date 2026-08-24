@@ -11,17 +11,6 @@
 </div>
 
 <div class="form-group">
-  <label for="token_id">API token ID</label>
-  <input type="text" class="form-control" id="token_id" name="token_id" placeholder="inkypi@pve!display" required />
-</div>
-
-<div class="form-group">
-  <label for="token_secret">API token secret</label>
-  <input type="password" class="form-control" id="token_secret" name="token_secret" required />
-  <small class="form-text text-muted"> Treat this as a password. It is shown only once when Proxmox creates it. </small>
-</div>
-
-<div class="form-group">
   <label for="verify_ssl">TLS certificate validation</label>
   <select class="form-control" id="verify_ssl" name="verify_ssl">
     <option value="true">Verify certificate</option>
@@ -37,12 +26,15 @@
   </select>
 </div>
 
+<p class="form-text text-muted">
+  This plugin reads your Proxmox API token from the environment keys
+  <code>PROXMOX_TOKEN_ID</code> and <code>PROXMOX_TOKEN_SECRET</code>. Add them via the key icon on the main screen.
+</p>
+
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     if (loadPluginSettings) {
       document.getElementById("proxmox_host").value = pluginSettings.proxmox_host || ""
-      document.getElementById("token_id").value = pluginSettings.token_id || ""
-      document.getElementById("token_secret").value = pluginSettings.token_secret || ""
 
       if (pluginSettings.verify_ssl) {
         document.querySelector(`#verify_ssl option[value="${pluginSettings.verify_ssl}"]`).selected = true
