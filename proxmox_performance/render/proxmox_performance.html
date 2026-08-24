@@ -11,45 +11,51 @@
     </div>
   </header>
 
-  <section class="pm-nodes">
-    {% for node in nodes %}
-    <div class="pm-node">
-      <div class="pm-node-name">
-        {{ node.name }}
-        <span class="pm-node-uptime">&middot; up {{ node.uptime }}</span>
+  <section class="pm-card pm-card-nodes">
+    <div class="pm-card-title"><span class="pm-card-accent pm-accent-blue"></span>Node Health</div>
+    <div class="pm-card-body">
+      {% for node in nodes %}
+      <div class="pm-node">
+        <div class="pm-node-name">
+          {{ node.name }}
+          <span class="pm-node-uptime">&middot; up {{ node.uptime }}</span>
+        </div>
+        <div class="pm-gauges">
+          <div class="pm-gauge">
+            <div class="pm-gauge-top"><span>CPU</span><span>{{ node.cpu_pct }}%</span></div>
+            <div class="pm-gauge-track"><div class="pm-gauge-fill pm-fill-cpu" style="width: {{ node.cpu_pct }}%;"></div></div>
+          </div>
+          <div class="pm-gauge">
+            <div class="pm-gauge-top"><span>MEM</span><span>{{ node.mem_used_h }} / {{ node.mem_total_h }}</span></div>
+            <div class="pm-gauge-track"><div class="pm-gauge-fill pm-fill-mem" style="width: {{ node.mem_pct }}%;"></div></div>
+          </div>
+          <div class="pm-gauge">
+            <div class="pm-gauge-top"><span>DISK</span><span>{{ node.disk_used_h }} / {{ node.disk_total_h }}</span></div>
+            <div class="pm-gauge-track"><div class="pm-gauge-fill pm-fill-disk" style="width: {{ node.disk_pct }}%;"></div></div>
+          </div>
+        </div>
       </div>
-      <div class="pm-gauges">
-        <div class="pm-gauge">
-          <div class="pm-gauge-top"><span>CPU</span><span>{{ node.cpu_pct }}%</span></div>
-          <div class="pm-gauge-track"><div class="pm-gauge-fill pm-fill-cpu" style="width: {{ node.cpu_pct }}%;"></div></div>
-        </div>
-        <div class="pm-gauge">
-          <div class="pm-gauge-top"><span>MEM</span><span>{{ node.mem_used_h }} / {{ node.mem_total_h }}</span></div>
-          <div class="pm-gauge-track"><div class="pm-gauge-fill pm-fill-mem" style="width: {{ node.mem_pct }}%;"></div></div>
-        </div>
-        <div class="pm-gauge">
-          <div class="pm-gauge-top"><span>DISK</span><span>{{ node.disk_used_h }} / {{ node.disk_total_h }}</span></div>
-          <div class="pm-gauge-track"><div class="pm-gauge-fill pm-fill-disk" style="width: {{ node.disk_pct }}%;"></div></div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
   </section>
 
-  <section class="pm-guests">
-    {% for guest in guests %}
-    <div class="pm-guest-row">
-      <span class="pm-guest-dot pm-dot-{{ guest.status_class }}"></span>
-      <span class="pm-guest-id">{{ guest.type }} {{ guest.vmid }}</span>
-      <span class="pm-guest-name">{{ guest.name }}</span>
-      {% if show_guest_stats and guest.cpu_pct is not none %}
-      <span class="pm-guest-stats">{{ guest.cpu_pct }}% &middot; {{ guest.mem_used_h }}</span>
+  <section class="pm-card pm-card-guests">
+    <div class="pm-card-title"><span class="pm-card-accent pm-accent-green"></span>Guests by memory</div>
+    <div class="pm-card-body pm-guest-list">
+      {% for guest in guests %}
+      <div class="pm-guest-row">
+        <span class="pm-guest-dot pm-dot-{{ guest.status_class }}"></span>
+        <span class="pm-guest-id">{{ guest.type }} {{ guest.vmid }}</span>
+        <span class="pm-guest-name">{{ guest.name }}</span>
+        {% if show_guest_stats and guest.cpu_pct is not none %}
+        <span class="pm-guest-stats">{{ guest.cpu_pct }}% &middot; {{ guest.mem_used_h }}</span>
+        {% endif %}
+      </div>
+      {% endfor %}
+      {% if omitted > 0 %}
+      <div class="pm-omitted">+{{ omitted }} more</div>
       {% endif %}
     </div>
-    {% endfor %}
-    {% if omitted > 0 %}
-    <div class="pm-omitted">+{{ omitted }} more</div>
-    {% endif %}
   </section>
 
   <footer class="pm-footer">{{ updated }}</footer>
