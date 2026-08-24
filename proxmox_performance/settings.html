@@ -327,10 +327,10 @@
   <div class="pm-shell">
     <section class="pm-hero">
       <div class="pm-eyebrow">Proxmox Performance</div>
-      <h2>Show live VM and container status from your Proxmox cluster.</h2>
+      <h2>Show live VM, container, and node health from your Proxmox cluster.</h2>
       <p>
-        Connect InkyPi to your Proxmox VE server, pick which guests to show, and control how running, stopped, and other
-        guest states are summarized on your e-paper display.
+        Connect InkyPi to your Proxmox VE server to display node CPU/memory/disk health alongside
+        per-guest running status and resource usage on your e-paper display.
       </p>
 
       <div class="pm-metrics">
@@ -349,7 +349,7 @@
         <div class="pm-metric">
           <div class="pm-metric-label">Display</div>
           <div class="pm-metric-value">Status board</div>
-          <div class="pm-metric-sub">Running/stopped counts and per-guest rows</div>
+          <div class="pm-metric-sub">Node health, guest states, and CPU/mem stats</div>
         </div>
       </div>
     </section>
@@ -357,21 +357,24 @@
     <section class="pm-hint-card">
       <div class="pm-hint-title">API token setup</div>
       <p class="pm-hint-copy">
-        In Proxmox, go to <strong>Datacenter → Permissions → API Tokens → Add</strong>. Select a user (a dedicated
-        non-root account with the <code>PVEAuditor</code> role is recommended over <code>root@pam</code>), enter any
-        label as the Token ID, and leave <strong>Privilege Separation</strong> checked so the token starts with no
-        permissions of its own.
+        In Proxmox, go to <strong>Datacenter → Permissions → API Tokens → Add</strong>. Select a user
+        (a dedicated non-root account with the <code>PVEAuditor</code> role is recommended over
+        <code>root@pam</code>), enter any label as the Token ID, and leave
+        <strong>Privilege Separation</strong> checked so the token starts with no permissions of its own.
       </p>
       <p class="pm-hint-copy" style="margin-top: 10px">
         After saving, Proxmox shows a combined <strong>Token ID</strong> in the form
-        <code>user@realm!tokenid</code> (for example <code>root@pam!inkypi</code>) and a <strong>Secret</strong> — both
-        shown only once. Copy the full combined Token ID into InkyPi's <code>PROXMOX_TOKEN_ID</code> key and the Secret
-        into <code>PROXMOX_TOKEN_SECRET</code>, using the key icon on the main screen.
+        <code>user@realm!tokenid</code> (for example <code>root@pam!inkypi</code>) and a
+        <strong>Secret</strong> — both shown only once. Copy the full combined Token ID into InkyPi's
+        <code>PROXMOX_TOKEN_ID</code> key and the Secret into <code>PROXMOX_TOKEN_SECRET</code>, using
+        the key icon on the main screen.
       </p>
       <p class="pm-hint-copy" style="margin-top: 10px">
-        If Privilege Separation was left unchecked on a <code>root</code> token, that token has full admin access to
-        your Proxmox host. Under <strong>Permissions → Add → API Token Permission</strong>, grant this token only the
-        <code>PVEAuditor</code> role on path <code>/</code> so it can read status but not modify anything.
+        If Privilege Separation is unchecked, the token inherits every permission the user account has
+        — for <code>root@pam</code>, that means full admin access. To scope it down instead: re-check
+        Privilege Separation, then use <strong>Permissions → Add → API Token Permission</strong> to grant
+        just the <code>PVEAuditor</code> role on path <code>/</code> with Propagate enabled, targeting the
+        token itself (not the user).
       </p>
     </section>
 
@@ -416,16 +419,8 @@
         <span class="pm-section-icon" aria-hidden="true">📊</span>
         <div class="pm-section-copy">
           <div class="pm-section-title">Display settings</div>
-          <div class="pm-section-subtitle">Control which guests appear on the rendered status board.</div>
+          <div class="pm-section-subtitle">Control which guests appear and how much detail is shown.</div>
         </div>
-      </div>
-
-      <div class="pm-field">
-        <label for="show_guest_stats" class="pm-label">Per-guest CPU/memory</label>
-        <select id="show_guest_stats" name="show_guest_stats" class="pm-input">
-          <option value="true">Show</option>
-          <option value="false">Hide</option>
-        </select>
       </div>
 
       <div class="pm-section-body">
@@ -437,6 +432,15 @@
               <option value="true">Show stopped guests</option>
             </select>
             <p class="pm-note">Hiding stopped guests keeps the list focused on what's currently running.</p>
+          </div>
+
+          <div class="pm-field">
+            <label for="show_guest_stats" class="pm-label">Per-guest CPU/memory</label>
+            <select id="show_guest_stats" name="show_guest_stats" class="pm-input">
+              <option value="true">Show</option>
+              <option value="false">Hide</option>
+            </select>
+            <p class="pm-note">Adds a CPU% and memory used/total line under each running guest.</p>
           </div>
         </div>
       </div>
@@ -450,18 +454,19 @@
       proxmox_host: "",
       verify_ssl: "true",
       show_stopped: "false",
-    }
+      show_guest_stats: "true",
+    };
 
     const values =
       typeof loadPluginSettings !== "undefined" && loadPluginSettings && typeof pluginSettings !== "undefined"
         ? Object.assign({}, defaults, pluginSettings)
-        : defaults
+        : defaults;
 
     Object.keys(defaults).forEach(function (key) {
-      const element = document.getElementById(key)
+      const element = document.getElementById(key);
       if (element) {
-        element.value = values[key] != null ? values[key] : defaults[key]
+        element.value = values[key] != null ? values[key] : defaults[key];
       }
-    })
-  })
+    });
+  });
 </script>
