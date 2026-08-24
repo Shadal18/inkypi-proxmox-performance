@@ -1,5 +1,6 @@
 {
   "display_name": "Proxmox Performance",
   "id": "proxmox_performance",
-  "class": "ProxmoxPerformance"
+  "class": "ProxmoxPerformance",
+  "repository": "https://github.com/Shadal18/inkypi-proxmox-performance"
 }

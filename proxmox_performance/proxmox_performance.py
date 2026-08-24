@@ -5,8 +5,7 @@ from io import BytesIO
 import requests
 from PIL import Image, ImageDraw, ImageFont
 
-from plugins.base_plugin import BasePlugin
-
+from plugins.base_plugin.base_plugin import BasePlugin
 
 class ProxmoxPerformance(BasePlugin):
     DEFAULT_TIMEOUT = 10
