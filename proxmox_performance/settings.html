@@ -1,459 +1,229 @@
 <style>
   :root {
-    --pm-bg: var(--background-color, var(--color-background, #f5f7fb));
-    --pm-bg-soft: var(--card-background-secondary, var(--color-surface-2, #eef2f7));
-    --pm-panel: var(--card-background, var(--color-surface, #ffffff));
-    --pm-panel-2: var(--card-background-hover, var(--color-surface-2, #f8fafc));
-    --pm-border: var(--border-color, rgba(15, 23, 42, 0.12));
-    --pm-text: var(--text-primary, var(--color-text, #0f172a));
-    --pm-text-muted: var(--text-secondary, var(--color-text-secondary, #475569));
-    --pm-text-soft: var(--text-muted, #64748b);
-    --pm-primary: var(--accent-color, #f97316);
-    --pm-info: var(--info-color, #3b82f6);
-    --pm-shadow-sm: 0 8px 24px rgba(15, 23, 42, 0.08);
-    --pm-radius-xl: 18px;
-    --pm-radius-lg: 14px;
+    --ink-bg: var(--background-color, var(--color-background, #f5f7fb));
+    --ink-bg-soft: var(--card-background-secondary, var(--color-surface-2, #eef2f7));
+    --ink-panel: var(--card-background, var(--color-surface, #ffffff));
+    --ink-panel-2: var(--card-background-hover, var(--color-surface-2, #f8fafc));
+    --ink-border: var(--border-color, rgba(15, 23, 42, 0.12));
+    --ink-text: var(--text-primary, var(--color-text, #0f172a));
+    --ink-text-muted: var(--text-secondary, var(--color-text-secondary, #475569));
+    --ink-text-soft: var(--text-muted, #64748b);
+    --ink-primary: var(--accent-color, #14b8a6);
+    --ink-info: var(--info-color, #3b82f6);
+    --ink-shadow-sm: 0 8px 24px rgba(15, 23, 42, 0.08);
+    --ink-radius-xl: 18px;
   }
 
   html.dark,
   body.dark,
   [data-theme="dark"],
   html[data-theme="dark"] {
-    --pm-bg: var(--background-color, var(--color-background, #0f172a));
-    --pm-bg-soft: var(--card-background-secondary, var(--color-surface-2, #162033));
-    --pm-panel: var(--card-background, var(--color-surface, #111827));
-    --pm-panel-2: var(--card-background-hover, var(--color-surface-2, #172033));
-    --pm-border: var(--border-color, rgba(255, 255, 255, 0.1));
-    --pm-text: var(--text-primary, var(--color-text, #f8fafc));
-    --pm-text-muted: var(--text-secondary, var(--color-text-secondary, #cbd5e1));
-    --pm-text-soft: var(--text-muted, #94a3b8);
-    --pm-shadow-sm: 0 10px 28px rgba(0, 0, 0, 0.22);
+    --ink-bg: var(--background-color, var(--color-background, #0f172a));
+    --ink-bg-soft: var(--card-background-secondary, var(--color-surface-2, #162033));
+    --ink-panel: var(--card-background, var(--color-surface, #111827));
+    --ink-panel-2: var(--card-background-hover, var(--color-surface-2, #172033));
+    --ink-border: var(--border-color, rgba(255, 255, 255, 0.1));
+    --ink-text: var(--text-primary, var(--color-text, #f8fafc));
+    --ink-text-muted: var(--text-secondary, var(--color-text-secondary, #cbd5e1));
+    --ink-text-soft: var(--text-muted, #94a3b8);
+    --ink-shadow-sm: 0 10px 28px rgba(0, 0, 0, 0.22);
   }
 
   .proxmox-settings-container {
     width: 100%;
     box-sizing: border-box;
-    color: var(--pm-text);
+    color: var(--ink-text);
   }
 
-  .pm-shell {
-    display: grid;
-    gap: 18px;
-    margin-top: 8px;
+  .ink-shell { display: grid; gap: 18px; margin-top: 8px; }
+
+  .ink-hero, .ink-section, .ink-hint-card, .ink-link-card {
+    overflow: hidden;
+    border: 1px solid var(--ink-border);
+    border-radius: var(--ink-radius-xl);
+    background: linear-gradient(180deg, var(--ink-panel), var(--ink-panel-2));
+    box-shadow: var(--ink-shadow-sm);
   }
 
-  .pm-hero {
+  .ink-hero {
     position: relative;
-    overflow: hidden;
-    border-radius: var(--pm-radius-xl);
-    border: 1px solid var(--pm-border);
+    padding: 22px;
     background:
-      radial-gradient(circle at top right, color-mix(in srgb, var(--pm-primary) 16%, transparent), transparent 34%),
-      radial-gradient(circle at bottom left, color-mix(in srgb, var(--pm-info) 12%, transparent), transparent 30%),
-      linear-gradient(180deg, color-mix(in srgb, var(--pm-panel) 92%, var(--pm-bg-soft) 8%), var(--pm-panel-2));
-    box-shadow: var(--pm-shadow-sm);
-    padding: 22px 22px 18px;
+      radial-gradient(circle at top right, color-mix(in srgb, var(--ink-primary) 16%, transparent), transparent 34%),
+      radial-gradient(circle at bottom left, color-mix(in srgb, var(--ink-info) 12%, transparent), transparent 30%),
+      linear-gradient(180deg, color-mix(in srgb, var(--ink-panel) 92%, var(--ink-bg-soft) 8%), var(--ink-panel-2));
   }
 
-  .pm-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    padding: 6px 10px;
-    margin-bottom: 10px;
-    border: 1px solid color-mix(in srgb, var(--pm-primary) 22%, transparent);
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--pm-primary) 14%, transparent);
-    color: var(--pm-primary);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+  .ink-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; margin-bottom: 10px;
+    border: 1px solid color-mix(in srgb, var(--ink-primary) 22%, transparent); border-radius: 999px;
+    background: color-mix(in srgb, var(--ink-primary) 14%, transparent); color: var(--ink-primary);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
   }
 
-  .pm-hero h2 {
-    margin: 0;
-    color: var(--pm-text);
-    font-size: 28px;
-    line-height: 1.05;
-    letter-spacing: -0.03em;
+  .ink-hero h2 { margin: 0; color: var(--ink-text); font-size: 28px; line-height: 1.08; letter-spacing: -0.03em; }
+  .ink-hero p { max-width: 68ch; margin: 10px 0 0; color: var(--ink-text-muted); font-size: 14px; line-height: 1.6; }
+
+  .ink-hint-card, .ink-link-card { padding: 16px 20px; }
+  .ink-hint-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+
+  .ink-hint-icon, .ink-section-icon, .ink-link-icon {
+    display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center;
+    border: 1px solid var(--ink-border); border-radius: 12px;
+    background: color-mix(in srgb, var(--ink-bg-soft) 65%, var(--ink-panel) 35%); font-size: 18px;
   }
 
-  .pm-hero p {
-    max-width: 68ch;
-    margin: 10px 0 0;
-    color: var(--pm-text-muted);
-    font-size: 14px;
-    line-height: 1.6;
+  .ink-hint-icon {
+    width: 30px; height: 30px; border-color: color-mix(in srgb, var(--ink-primary) 28%, transparent);
+    border-radius: 9px; background: color-mix(in srgb, var(--ink-primary) 14%, transparent); font-size: 16px;
   }
 
-  .pm-metrics {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-    margin-top: 18px;
+  .ink-hint-title { margin: 0; color: var(--ink-text); font-size: 14px; font-weight: 700; }
+  .ink-hint-copy, .ink-link-help { margin: 0; color: var(--ink-text-muted); font-size: 12px; line-height: 1.6; }
+
+  .ink-hint-copy code, .ink-note code {
+    padding: 2px 5px; border-radius: 5px; background: color-mix(in srgb, var(--ink-primary) 12%, transparent);
+    color: var(--ink-text); font-family: monospace;
   }
 
-  .pm-metric {
-    min-width: 0;
-    padding: 14px 14px 12px;
-    border: 1px solid var(--pm-border);
-    border-radius: var(--pm-radius-lg);
-    background: color-mix(in srgb, var(--pm-panel) 92%, var(--pm-bg) 8%);
-    box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 22%, transparent);
-  }
+  .ink-section-header { display: flex; align-items: center; gap: 14px; padding: 18px 20px; border-bottom: 1px solid var(--ink-border); }
+  .ink-section-icon { width: 38px; height: 38px; }
+  .ink-section-copy { flex: 1; min-width: 0; }
+  .ink-section-title { margin: 0; color: var(--ink-text); font-size: 18px; font-weight: 700; line-height: 1.2; }
+  .ink-section-subtitle { margin-top: 4px; color: var(--ink-text-muted); font-size: 13px; }
+  .ink-section-body { padding: 18px 20px 20px; }
 
-  .pm-metric-label {
-    margin-bottom: 8px;
-    color: var(--pm-text-soft);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
+  .ink-grid, .ink-grid-2 { display: grid; gap: 16px; }
+  .ink-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ink-field { display: grid; min-width: 0; gap: 8px; }
+  .ink-label { color: var(--ink-text-soft); font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
 
-  .pm-metric-value {
-    color: var(--pm-text);
-    font-size: 28px;
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: -0.03em;
-  }
-
-  .pm-metric-sub {
-    margin-top: 6px;
-    color: var(--pm-text-muted);
-    font-size: 12px;
-  }
-
-  .pm-section,
-  .pm-link-card {
-    overflow: hidden;
-    border: 1px solid var(--pm-border);
-    border-radius: var(--pm-radius-xl);
-    background: linear-gradient(180deg, var(--pm-panel), var(--pm-panel-2));
-    box-shadow: var(--pm-shadow-sm);
-  }
-
-  .pm-section-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 18px 20px;
-    border-bottom: 1px solid var(--pm-border);
-  }
-
-  .pm-section-icon {
-    display: inline-flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    width: 38px;
-    height: 38px;
-    border: 1px solid var(--pm-border);
-    border-radius: 12px;
-    background: color-mix(in srgb, var(--pm-bg-soft) 65%, var(--pm-panel) 35%);
-    font-size: 18px;
-  }
-
-  .pm-section-copy {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .pm-section-title {
-    margin: 0;
-    color: var(--pm-text);
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 1.2;
-  }
-
-  .pm-section-subtitle {
-    margin-top: 4px;
-    color: var(--pm-text-muted);
-    font-size: 13px;
-  }
-
-  .pm-section-body {
-    padding: 18px 20px 20px;
-  }
-
-  .pm-grid {
-    display: grid;
-    gap: 16px;
-  }
-
-  .pm-grid-2 {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-  }
-
-  .pm-field {
-    display: grid;
-    min-width: 0;
-    gap: 8px;
-  }
-
-  .pm-label {
-    color: var(--pm-text-soft);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  .pm-input,
-  .proxmox-settings-container input[type="text"],
-  .proxmox-settings-container input[type="url"],
-  .proxmox-settings-container input[type="number"],
-  .proxmox-settings-container select {
-    box-sizing: border-box;
-    width: 100%;
-    min-height: 46px;
-    padding: 0 14px;
-    border: 1px solid var(--pm-border);
-    border-radius: 12px;
-    outline: none;
-    background: var(--pm-panel);
-    color: var(--pm-text);
+  .ink-input, .proxmox-settings-container input[type="text"], .proxmox-settings-container input[type="url"], .proxmox-settings-container select {
+    box-sizing: border-box; width: 100%; min-height: 46px; padding: 0 14px; border: 1px solid var(--ink-border);
+    border-radius: 12px; outline: none; background: var(--ink-panel); color: var(--ink-text);
     box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 14%, transparent);
   }
 
-  .pm-input::placeholder,
-  .proxmox-settings-container input::placeholder {
-    color: var(--pm-text-soft);
-    opacity: 1;
+  .ink-input::placeholder, .proxmox-settings-container input::placeholder { color: var(--ink-text-soft); opacity: 1; }
+  .ink-input:focus, .proxmox-settings-container input:focus, .proxmox-settings-container select:focus {
+    border-color: color-mix(in srgb, var(--ink-primary) 45%, transparent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--ink-primary) 14%, transparent);
   }
 
-  .pm-input:focus,
-  .proxmox-settings-container input:focus,
-  .proxmox-settings-container select:focus {
-    border-color: color-mix(in srgb, var(--pm-primary) 45%, transparent);
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--pm-primary) 14%, transparent);
-  }
+  .ink-note { margin: 0; color: var(--ink-text-muted); font-size: 12px; line-height: 1.6; }
 
-  .pm-note {
-    margin: 0;
-    color: var(--pm-text-muted);
-    font-size: 12px;
-    line-height: 1.6;
-  }
+  .ink-link-card { display: flex; align-items: center; gap: 12px; }
+  .ink-link-icon { width: 38px; height: 38px; background: color-mix(in srgb, var(--ink-info) 13%, var(--ink-panel)); }
+  .ink-link-copy { min-width: 0; }
+  .ink-link-card a { display: inline-block; color: var(--ink-primary); font-weight: 700; text-decoration: none; word-break: break-word; }
+  .ink-link-card a:hover, .ink-link-card a:focus-visible { outline: none; text-decoration: underline; }
 
-  .pm-note code {
-    padding: 2px 5px;
-    border-radius: 5px;
-    background: color-mix(in srgb, var(--pm-primary) 12%, transparent);
-    color: var(--pm-text);
-    font-family: monospace;
-  }
-
-  .pm-link-card {
-    margin-bottom: 24px;
-    padding: 16px 20px;
-  }
-
-  .pm-link-card a {
-    color: var(--pm-primary);
-    font-weight: 700;
-    text-decoration: none;
-    word-break: break-word;
-  }
-
-  .pm-link-card a:hover,
-  .pm-link-card a:focus-visible {
-    outline: none;
-    text-decoration: underline;
-  }
-
-  .pm-link-help {
-    margin-top: 8px;
-    color: var(--pm-text-muted);
-    font-size: 12px;
-    line-height: 1.6;
-  }
-
-  .floatingchat-container-wrap,
-  .floating-chat-kofi-popup-iframe {
-    right: 16px !important;
-    left: unset !important;
-  }
-
-  .floatingchat-container-wrap {
-    bottom: 14px !important;
-  }
-
-  .floating-chat-kofi-popup-iframe {
-    bottom: 76px !important;
-  }
-
-  @media (max-width: 920px) {
-    .pm-metrics,
-    .pm-grid-2 {
-      grid-template-columns: 1fr;
-    }
-  }
+  .floatingchat-container-wrap, .floatingchat-container-wrap-mobi { right: 16px !important; bottom: 14px !important; left: unset !important; }
+  .floating-chat-kofi-popup-iframe { right: 16px !important; bottom: 76px !important; left: unset !important; }
 
   @media (max-width: 760px) {
-    .pm-hero {
-      padding: 18px;
-    }
-
-    .pm-hero h2 {
-      font-size: 22px;
-    }
-
-    .pm-section-header {
-      padding: 16px;
-    }
-
-    .pm-section-body,
-    .pm-link-card {
-      padding: 16px;
-    }
-
-    .pm-link-card {
-      margin-bottom: 20px;
-    }
+    .ink-hero { padding: 18px; }
+    .ink-hero h2 { font-size: 22px; }
+    .ink-grid-2 { grid-template-columns: 1fr; }
+    .ink-section-header, .ink-section-body, .ink-hint-card, .ink-link-card { padding: 16px; }
+    .ink-link-card { align-items: flex-start; }
   }
 </style>
 
 <div class="proxmox-settings-container">
-  <div class="pm-shell">
-    <section class="pm-hero">
-      <div class="pm-eyebrow">Proxmox Performance</div>
+  <div class="ink-shell">
+    <section class="ink-hero">
+      <div class="ink-eyebrow">🖥 Proxmox performance</div>
       <h2>Show live VM, container, and node health from your Proxmox cluster.</h2>
       <p>
-        Connect InkyPi to your Proxmox VE server to display node CPU/memory/disk health alongside per-guest running
-        status and resource usage on your e-paper display.
+        Connect InkyPi to Proxmox VE to render node health, guest running states, and selected CPU and memory details
+        on your e-paper display.
       </p>
-
-      <div class="pm-metrics">
-        <div class="pm-metric">
-          <div class="pm-metric-label">Source</div>
-          <div class="pm-metric-value">Proxmox</div>
-          <div class="pm-metric-sub">Cluster resources API</div>
-        </div>
-
-        <div class="pm-metric">
-          <div class="pm-metric-label">Guests</div>
-          <div class="pm-metric-value">VMs + CTs</div>
-          <div class="pm-metric-sub">QEMU virtual machines and LXC containers</div>
-        </div>
-
-        <div class="pm-metric">
-          <div class="pm-metric-label">Display</div>
-          <div class="pm-metric-value">Status board</div>
-          <div class="pm-metric-sub">Node health, guest states, and CPU/mem stats</div>
-        </div>
-      </div>
     </section>
 
-    <section class="pm-section">
-      <div class="pm-section-header">
-        <span class="pm-section-icon" aria-hidden="true">🔑</span>
-        <div class="pm-section-copy">
-          <div class="pm-section-title">API token setup</div>
-          <div class="pm-section-subtitle">This plugin requires a Proxmox API token.</div>
-        </div>
+    <section class="ink-hint-card">
+      <div class="ink-hint-heading">
+        <span class="ink-hint-icon" aria-hidden="true">🔑</span>
+        <h3 class="ink-hint-title">API token setup</h3>
       </div>
-
-      <div class="pm-section-body">
-        <p class="pm-note">
-          In Proxmox, go to <strong>Datacenter → Permissions → API Tokens → Add</strong>. Select a user (a dedicated
-          non-root account is recommended over <code>root@pam</code>) and enter any label as the Token ID.
-        </p>
-        <p class="pm-note" style="margin-top: 10px">
-          After saving, Proxmox shows a combined <strong>Token ID</strong> in the form
-          <code>user@realm!tokenid</code> and a <strong>Secret</strong> — both shown only once. Copy the full combined
-          Token ID into InkyPi's <code>PROXMOX_TOKEN_ID</code> key and the Secret into
-          <code>PROXMOX_TOKEN_SECRET</code>, using the key icon on the main screen.
-        </p>
-        <p class="pm-note" style="margin-top: 10px">
-          Then go to <strong>Datacenter → Permissions → Add</strong> and grant a role on path <code>/</code> with
-          Propagate enabled, <strong>twice</strong>: once selecting the plain user account (e.g.
-          <code>API_User@pam</code>) and once selecting the token entity itself (e.g.
-          <code>API_User@pam!tokenid</code>). Some Proxmox setups only pick up guest/VM data when both the user and the
-          token have an explicit grant, not just one or the other.
-        </p>
-        <p class="pm-note" style="margin-top: 10px">
-          Use the <code>PVEAuditor</code> role for both entries if you only want this plugin to read status.
-        </p>
-      </div>
+      <p class="ink-hint-copy">
+        In Proxmox, create an API token at <strong>Datacenter → Permissions → API Tokens</strong>. Save the full token
+        ID as <code>PROXMOX_TOKEN_ID</code> and its secret as <code>PROXMOX_TOKEN_SECRET</code> in InkyPi’s
+        <strong>API Keys</strong> page using the key icon.
+      </p>
+      <p class="ink-hint-copy" style="margin-top: 10px">
+        Grant the token read-only access with <code>PVEAuditor</code> on path <code>/</code> and enable propagation.
+        A dedicated non-root API user is recommended.
+      </p>
     </section>
 
-    <section class="pm-section">
-      <div class="pm-section-header">
-        <span class="pm-section-icon" aria-hidden="true">🖥</span>
-        <div class="pm-section-copy">
-          <div class="pm-section-title">Proxmox connection</div>
-          <div class="pm-section-subtitle">Enter the server address InkyPi should query.</div>
+    <section class="ink-section">
+      <div class="ink-section-header">
+        <span class="ink-section-icon" aria-hidden="true">🔌</span>
+        <div class="ink-section-copy">
+          <h3 class="ink-section-title">Proxmox connection</h3>
+          <div class="ink-section-subtitle">Enter the server address InkyPi should query.</div>
         </div>
       </div>
 
-      <div class="pm-section-body">
-        <div class="pm-grid-2">
-          <div class="pm-field">
-            <label for="proxmox_host" class="pm-label">Proxmox server URL</label>
-            <input
-              type="url"
-              id="proxmox_host"
-              name="proxmox_host"
-              class="pm-input"
-              placeholder="https://pve.example.lan:8006"
-              required
-            />
-            <p class="pm-note">Use the address that the InkyPi device can reach on your network, including the port.</p>
+      <div class="ink-section-body">
+        <div class="ink-grid-2">
+          <div class="ink-field">
+            <label for="proxmox_host" class="ink-label">Proxmox server URL</label>
+            <input type="url" id="proxmox_host" name="proxmox_host" class="ink-input" placeholder="https://pve.example.lan:8006" required />
+            <p class="ink-note">Use the reachable Proxmox VE URL, including port <code>8006</code>.</p>
           </div>
 
-          <div class="pm-field">
-            <label for="verify_ssl" class="pm-label">TLS certificate validation</label>
-            <select id="verify_ssl" name="verify_ssl" class="pm-input">
+          <div class="ink-field">
+            <label for="verify_ssl" class="ink-label">TLS certificate validation</label>
+            <select id="verify_ssl" name="verify_ssl" class="ink-input">
               <option value="true">Verify certificate</option>
               <option value="false">Disable verification (self-signed certificate only)</option>
             </select>
-            <p class="pm-note">Disable only if Proxmox uses a self-signed certificate you have not imported.</p>
+            <p class="ink-note">Disable only when using a self-signed certificate that InkyPi does not trust.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="pm-section">
-      <div class="pm-section-header">
-        <span class="pm-section-icon" aria-hidden="true">📊</span>
-        <div class="pm-section-copy">
-          <div class="pm-section-title">Display settings</div>
-          <div class="pm-section-subtitle">Control which guests appear and how much detail is shown.</div>
+    <section class="ink-section">
+      <div class="ink-section-header">
+        <span class="ink-section-icon" aria-hidden="true">📊</span>
+        <div class="ink-section-copy">
+          <h3 class="ink-section-title">Display settings</h3>
+          <div class="ink-section-subtitle">Control which guests appear and how much detail is shown.</div>
         </div>
       </div>
 
-      <div class="pm-section-body">
-        <div class="pm-grid-2">
-          <div class="pm-field">
-            <label for="show_stopped" class="pm-label">Stopped guests</label>
-            <select id="show_stopped" name="show_stopped" class="pm-input">
+      <div class="ink-section-body">
+        <div class="ink-grid-2">
+          <div class="ink-field">
+            <label for="show_stopped" class="ink-label">Stopped guests</label>
+            <select id="show_stopped" name="show_stopped" class="ink-input">
               <option value="false">Hide stopped guests</option>
               <option value="true">Show stopped guests</option>
             </select>
-            <p class="pm-note">Hiding stopped guests keeps the list focused on what's currently running.</p>
+            <p class="ink-note">Hide inactive guests to keep the display focused on running workloads.</p>
           </div>
 
-          <div class="pm-field">
-            <label for="show_guest_stats" class="pm-label">Per-guest CPU/memory</label>
-            <select id="show_guest_stats" name="show_guest_stats" class="pm-input">
+          <div class="ink-field">
+            <label for="show_guest_stats" class="ink-label">Per-guest CPU and memory</label>
+            <select id="show_guest_stats" name="show_guest_stats" class="ink-input">
               <option value="true">Show</option>
               <option value="false">Hide</option>
             </select>
-            <p class="pm-note">Adds a CPU% and memory used/total line under each running guest.</p>
+            <p class="ink-note">Adds CPU percentage and memory-used details beneath running guests.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="pm-link-card">
-      <a href="https://github.com/Shadal18/inkypi-proxmox-performance" target="_blank" rel="noopener noreferrer">
-        github.com/Shadal18/inkypi-proxmox-performance
-      </a>
-      <div class="pm-link-help">Setup help, updates, release notes, and source code.</div>
+    <section class="ink-link-card">
+      <span class="ink-link-icon" aria-hidden="true">⌘</span>
+      <div class="ink-link-copy">
+        <a href="https://github.com/Shadal18/inkypi-proxmox-performance" target="_blank" rel="noopener noreferrer">github.com/Shadal18/inkypi-proxmox-performance</a>
+        <div class="ink-link-help">Setup help, updates, release notes, and source code.</div>
+      </div>
     </section>
   </div>
 </div>
@@ -461,13 +231,7 @@
 <script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const defaults = {
-      proxmox_host: "",
-      verify_ssl: "true",
-      show_stopped: "false",
-      show_guest_stats: "true",
-    }
-
+    const defaults = { proxmox_host: "", verify_ssl: "true", show_stopped: "false", show_guest_stats: "true" }
     const values =
       typeof loadPluginSettings !== "undefined" && loadPluginSettings && typeof pluginSettings !== "undefined"
         ? Object.assign({}, defaults, pluginSettings)
@@ -475,15 +239,15 @@
 
     Object.keys(defaults).forEach(function (key) {
       const element = document.getElementById(key)
-      if (element) {
-        element.value = values[key] != null ? values[key] : defaults[key]
-      }
+      if (element) element.value = values[key] != null ? values[key] : defaults[key]
     })
 
     if (typeof kofiWidgetOverlay !== "undefined") {
+      const messages = ["I ♥ Coffee", "Tip Jar", "Fuel the Pixels", "Buy Me a Coffee", "Keep InkyPi Brewing"]
+      const message = messages[Math.floor(Math.random() * messages.length)]
       kofiWidgetOverlay.draw("shadal", {
         type: "floating-chat",
-        "floating-chat.donateButton.text": "I ❤️ Coffee",
+        "floating-chat.donateButton.text": message,
         "floating-chat.donateButton.background-color": "#00b9fe",
         "floating-chat.donateButton.text-color": "#fff",
       })
